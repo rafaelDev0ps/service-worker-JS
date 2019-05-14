@@ -1,0 +1,17 @@
+.home {
+    padding: 10px;
+    text-align: center;
+}
+
+.img-center {
+    width: 100%;
+    height: 100%;
+}
+
+.img-center img{
+    width: 30%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
