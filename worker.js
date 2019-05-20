@@ -1,11 +1,23 @@
 var nameCache = 'cacheNASA';
+var urlServer = 'http://localhost:3000/';
 var urlsCache = [
-    './img/orion.jpg',
-    './img/orion2.jpg',
-    './img/saturn.jpg',
-    './css/style.css',
-    './js/app.js'
+    // './img/orion.jpg',
+    // './img/orion2.jpg',
+    // './img/saturn.jpg',
+    // './css/style.css',
+    // './js/app.js',
+    urlServer
 ];
+
+var http = new XMLHttpRequest();
+http.addEventListener("load", function() {
+    // console.log("RETORNO: ", this.response);
+    // document.write("<img src="+this.response+">");
+    document.getElementById('imagem').setAttribute('src', 'data:image/jpg;base64, '+this.response);
+});
+http.open("GET", urlServer, true); //Inicializa um pedido assincrono.
+http.send();
+
 
 // INSTALL
 self.addEventListener('install', function(event) {
