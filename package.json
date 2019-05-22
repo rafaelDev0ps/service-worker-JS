@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/rafamttz/service-worker-JS#readme",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "fs": "0.0.1-security",
+    "jimp": "^0.6.4"
   }
 }

@@ -1,11 +1,11 @@
 var nameCache = 'cacheNASA';
+
 var urlsCache = [
-    './img/orion.jpg',
-    './img/orion2.jpg',
-    './img/saturn.jpg',
+    './index.html',
     './css/style.css',
     './js/app.js'
 ];
+
 
 // INSTALL
 self.addEventListener('install', function(event) {
@@ -15,7 +15,24 @@ self.addEventListener('install', function(event) {
             return cache.addAll(urlsCache);
             
         }).catch(function(erro) {
-            console.log('Deu erro ao instalar: ', erro);
+            console.error('Deu erro ao instalar: ', erro);
+        })
+    );
+});
+
+// UPDATE
+self.addEventListener('activate', function(event) {
+    var cacheWhitelist = [nameCache, 'novoCacheNASA'];
+
+    event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.map(function(cacheName) {
+                    if (cacheWhitelist.indexOf(cacheName) === -1) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
         })
     );
 });
@@ -24,14 +41,29 @@ self.addEventListener('install', function(event) {
 self.addEventListener('fetch', function(event) {
     event.respondWith(
         caches.match(event.request).then(function(response) {
-            if(response) {
+            // Cache hit - return response
+            if (response) {
                 return response;
             }
-            console.log('Fetching data into cache');
-            return fetch(event.request);
 
-        }).catch(function(error) {
-            console.log('Deu erro ao realizar fetch: ', erro);
+            var fetchRequest = event.request.clone();
+
+            return fetch(fetchRequest).then(function(response) {
+                    // Check if we received a valid response
+                    if(!response || response.status !== 200 || response.type !== 'basic') {
+                        return response;
+                    }
+
+                    var responseToCache = response.clone();
+
+                    caches.open(nameCache).then(function(cache) {
+                        cache.put(event.request, responseToCache);
+                    });
+
+                }
+            ).catch(function(error) {
+                console.error(error);
+            });
         })
     );
 });
